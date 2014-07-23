@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- MD5 implementation of Joseph Myers, Paul Johnston, Greg Holt and
+    Will Bond hosted on GitHub -->
+    <script type="text/javascript"
+        src="https://raw.githubusercontent.com/wbond/md5-js/master/md5.js">
+    </script>
+    <script type="text/javascript">
+    /**
+     * Custom assert implementation.
+     * @param outcome evaluated expression to test on
+     * @param description of the asserted condition
+     *
+     * @throws Error with `description`
+    */
+    function assert(outcome, description)
+    {
+        if (!outcome)
+            throw new Error(description);
+    }
+
+    /* We need to wait until the window did finish loading. Otherwise you might
+    encounter weird `null is not an object` errors. */
+    window.onload = function() {
+        /* Get the canvas (quite obvious) */
+        var cnvs = document.getElementById("cnvs");
+        assert(cnvs !== undefined, "cnvs not found!");
+
+        /* Get the canvas context (needed for drawing). */
+        var cnvsContext = cnvs.getContext("2d");
+        assert(cnvsContext !== undefined, "canvas.getContext() not supported");
+
+        /* Draw some text onto the canvas */
+        cnvsContext.font = "18pt Arial";
+        cnvsContext.fillText("Lorem ipsum dolor sit amet, consecteteur.", 2, 20);
+
+        /* Base64 encoded PNG containing the canvas content */
+        var pngImage = cnvs.toDataURL('image/png');
+        var hash = md5(pngImage);
+
+        /* Print the (unique) hash of the image. */
+        // console.log(hash);
+        document.getElementById("out").innerHTML = "Your hash is " + hash;
+
+        /* Here one could save it on a server and track the user through
+        identifying him by checking for the existence of the hash
+        … */
+    };
+    </script>
+</head>
+<body>
+    <!-- In reality this would be hidden, of course. -->
+    <canvas id="cnvs" width="460" height="30">
+        Sorry, your browser doesn't support the &lt;canvas&gt; element.
+    </canvas>
+
+    <hr>
+
+    <div id="out">
+    </div>
+</body>
+</html>
